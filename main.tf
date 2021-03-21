@@ -18,11 +18,19 @@ locals {
   name_squished = replace(local.name, "-", "")
 }
 
+# Resource Group
+# --------------
+
 resource "azurerm_resource_group" "rg" {
   name     = "${local.name}-rg"
   location = "centralus"
   tags     = var.tags
 }
+
+# Container Registry
+# ------------------
+
+# Registry
 
 resource "azurerm_container_registry" "cr" {
   name                = "${local.name_squished}cr"
@@ -31,6 +39,24 @@ resource "azurerm_container_registry" "cr" {
   sku                 = "Standard"
   tags                = var.tags
 }
+
+# Assignments
+
+data "azurerm_user_assigned_identity" "acr_principals" {
+  for_each            = var.acr_identities
+  name                = each.value.user_mi_name
+  resource_group_name = each.value.user_mi_rg
+}
+
+resource "azurerm_role_assignment" "acr_assignments" {
+  for_each             = var.acr_identities
+  scope                = azurerm_container_registry.cr.id
+  role_definition_name = var.acr_identities[each.key].user_mi_role
+  principal_id         = data.azurerm_user_assigned_identity.acr_principals[each.key].principal_id
+}
+
+# Key Vault
+# ---------
 
 resource "azurerm_key_vault" "kv" {
   name                        = "${local.name}-kv"
