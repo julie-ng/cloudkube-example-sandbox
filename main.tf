@@ -14,21 +14,14 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 locals {
-  tags = {
-    public = "true"
-    demo   = "true"
-    env    = "prod"
-    iac    = "terraform"
-  }
-
-  name          = "ci-demo-team-sandbox"
+  name          = var.name
   name_squished = replace(local.name, "-", "")
 }
 
 resource "azurerm_resource_group" "rg" {
   name     = "${local.name}-rg"
   location = "centralus"
-  tags     = local.tags
+  tags     = var.tags
 }
 
 resource "azurerm_container_registry" "cr" {
@@ -36,8 +29,7 @@ resource "azurerm_container_registry" "cr" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "Standard"
-  admin_enabled       = false
-  tags                = local.tags
+  tags                = var.tags
 }
 
 resource "azurerm_key_vault" "kv" {
@@ -50,24 +42,5 @@ resource "azurerm_key_vault" "kv" {
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
   enable_rbac_authorization   = true
-	tags 												= local.tags
-}
-
-output "summary" {
-	value = {
-		resource_group = {
-			name = azurerm_resource_group.rg.name
-			location = azurerm_resource_group.rg.location
-		}
-		container_registry = {
-			id = azurerm_container_registry.cr.id
-			admin_enabled = azurerm_container_registry.cr.admin_enabled
-			login_server = azurerm_container_registry.cr.login_server
-		}
-		key_vault = {
-			id = azurerm_key_vault.kv.id
-			vault_uri = azurerm_key_vault.kv.vault_uri
-			enable_rbac_authorization = azurerm_key_vault.kv.enable_rbac_authorization
-		}
-	}
+  tags                        = var.tags
 }
