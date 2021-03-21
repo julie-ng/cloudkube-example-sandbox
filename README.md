@@ -33,16 +33,19 @@ Here are some other considerations to think about.
 
 As an exercise, imagine we also bootstrap the following:
 
-| Identity | Role | Description |
+| Managed Identity | Role | Description |
 |:--|:--|:--|
 | `ci-mi` | `AcrPush` | CI/CD tools need to push images |
 | `cluster-mi` | `AcrPull` | Tools, e.g. Kubernetes cluster needs to be able to pull images |
 | `team-mi` | `Contributor` | Team needs to manage this resource |
 
-**Bonus Question**  
-Why is `team-mi` have a solid and blue colored border? How is it different from the other 2 managed identities illustrated above?
+For additional details see the following documentation:
 
-For additional details see [Azure Container Registry Roles](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-roles)
+- [Azure Container Registry Roles](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-roles)
+- [What are managed identities for Azure resources?](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview)
+
+**Bonus Question**  
+Why does `team-mi` have a solid and blue colored border? How is it different from the other 2 managed identities illustrated above?
 
 ## Disclaimer
 
