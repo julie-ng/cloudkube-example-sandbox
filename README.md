@@ -4,7 +4,7 @@
 
 A central cloud operations team deploys a sandbox for a developer team. 
 
-<img src="./example-diagram.png" width="540" alt="Example Sandbox">
+<img src="./example-diagram.svg" width="540" alt="Example Sandbox">
 
 _Note: Managed Identities are illustrated for example scenario considerations described below._
 
